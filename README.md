@@ -16,3 +16,16 @@ _MC可爱头像生成器_
 
 - [x] 从 Minecraft.net 通过 _玩家名_ & _UUID_ 获取源皮肤材质
 - [x] 从 [LittleSkin.cn](https://littleskin.cn/) 通过 _玩家名_ & _UUID_ 获取源皮肤材质
+
+## Development 开发
+
+```bash
+# install project
+pdm install
+
+# sync dependencies
+pdm sync --clean
+
+# run dev server
+pdm dev
+```
