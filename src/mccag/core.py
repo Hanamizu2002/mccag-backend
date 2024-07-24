@@ -26,7 +26,7 @@ class AvatarRenderer:
         # 创建画布并缩放至 128x128
         canvas_size = (1000, 1000)
         canvas = Image.new("RGBA", canvas_size, (255, 255, 255, 0))
-        resized_player_texture = self.player_texture.resize((128, 128), Image.NEAREST)
+        resized_player_texture = self.player_texture.resize((128, 128), Image.Resampling.NEAREST)
 
         operations = [
             ((8, 40, 16, 64), 8.375, (434, 751)),
@@ -53,15 +53,11 @@ class AvatarRenderer:
             )
             bordered_size = (new_size[0] + 30, new_size[1] + 30)
             bordered_image = Image.new("RGBA", bordered_size, (0, 0, 0, 0))
-            bordered_image.paste(
-                cropped_image.resize(new_size, Image.NEAREST), (15, 15)
-            )
+            bordered_image.paste(cropped_image.resize(new_size, Image.Resampling.NEAREST), (15, 15))
 
             mask = bordered_image.split()[3]
             solid_image = Image.new("RGBA", bordered_image.size, (75, 85, 142, 255))
-            shadow_image = Image.composite(
-                solid_image, Image.new("RGBA", bordered_image.size), mask
-            )
+            shadow_image = Image.composite(solid_image, Image.new("RGBA", bordered_image.size), mask)
             blurred_shadow = shadow_image.filter(ImageFilter.GaussianBlur(7))
             alpha = blurred_shadow.split()[3].point(lambda p: p * 0.5)
             blurred_shadow.putalpha(alpha)
