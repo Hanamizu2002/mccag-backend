@@ -6,12 +6,19 @@ from yggdrasil_mc.client import PlayerProfile
 
 from mccag.core import AvatarRenderer
 
-COMMON_RESPONSE = {
+PNG_200_RESPONSE = {
     200: {
         "content": {"image/png": {}},
         "description": "The rendered image",
     },
-    400: {"description": "Texture not found"},
+}
+
+COMMON_404_RESPONSE = {
+    404: {"description": "Texture not found"},
+}
+
+COMMON_417_RESPONSE = {
+    417: {"description": "File too large"},
 }
 
 
@@ -35,7 +42,7 @@ async def fetch_skin(url: str) -> BytesIO:
     return BytesIO(resp.content)
 
 
-async def generate_response(profile: PlayerProfile) -> Response:
+async def generate_response_by_fetch_profile(profile: PlayerProfile) -> Response:
     if profile.skin:
         skin_texture = await fetch_skin(str(profile.skin.url))
         image = AvatarRenderer(skin_texture).render()
