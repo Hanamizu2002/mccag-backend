@@ -30,3 +30,13 @@ pdm sync --clean
 # run dev server
 pdm dev
 ```
+
+## Docker 部署
+
+```bash
+# build
+docker build -t mccag:latest .
+
+# run
+docker run -d -p 80:8023 --name mccag mccag:latest
+```
