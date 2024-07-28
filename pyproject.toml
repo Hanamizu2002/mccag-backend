@@ -26,7 +26,7 @@ build-backend = "pdm.backend"
 
 
 [tool.pdm.scripts]
-dev = { cmd = "uvicorn mccag.main:app --port 8023 --reload", help = "Start the server" }
+dev = { cmd = "uvicorn mccag.main:app --host '0.0.0.0' --port 8023 --reload", help = "Start the server" }
 
 [tool.pdm]
 distribution = true
