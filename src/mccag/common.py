@@ -42,10 +42,10 @@ async def fetch_skin(url: str) -> BytesIO:
     return BytesIO(resp.content)
 
 
-async def generate_response_by_fetch_profile(profile: PlayerProfile) -> Response:
+async def generate_response_by_fetch_profile(profile: PlayerProfile, avatar_type: str) -> Response:
     if profile.skin:
         skin_texture = await fetch_skin(str(profile.skin.url))
-        image = AvatarRenderer(skin_texture).render()
+        image = AvatarRenderer(skin_texture, avatar_type).render()
 
         return Response(
             content=image.getvalue(),
