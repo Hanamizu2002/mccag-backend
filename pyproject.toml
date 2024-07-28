@@ -1,9 +1,10 @@
 [project]
 name = "mccag"
-version = "0.1.2"
+version = "0.1.3"
 description = "Minecraft Cute Avatar Generator"
 authors = [
     {name = "SerinaNya", email = "34389622+SerinaNya@users.noreply.github.com"},
+    {name = "Kyle Ma", email = "m2069134445@icloud.com"},
 ]
 dependencies = [
     "httpx[http2,socks]>=0.27.0",
