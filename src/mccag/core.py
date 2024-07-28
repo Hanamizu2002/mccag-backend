@@ -1,11 +1,19 @@
 from io import BytesIO
+from typing import Annotated, Literal
+
+from fastapi import Query
 from PIL import Image, ImageFilter, ImageOps
+
+type AvatarTypes = Annotated[
+    Literal["full", "head"], Query(description="Type of avatar to generate", example="full")
+]
 
 
 class AvatarRenderer:
     player_texture: Image.Image
+    avatar_type: Literal["full", "head"] = "full"
 
-    def __init__(self, player_texture: BytesIO, avatar_type: str = 'full') -> None:
+    def __init__(self, player_texture: BytesIO) -> None:
         """
         创建 `AvatarGenerator` 对象
 
@@ -22,11 +30,10 @@ class AvatarRenderer:
             avatar_type (str): 头像类型，支持 'full' 和 'head'
         """
         self.player_texture = Image.open(player_texture)
-        self.avatar_type = avatar_type
 
     def _create_canvas(self) -> Image.Image:
         # 创建画布并缩放至 128x128
-        canvas_size = (1000, 1000) if self.avatar_type == 'full' else (500, 500)
+        canvas_size = (1000, 1000) if self.avatar_type == "full" else (500, 500)
         canvas = Image.new("RGBA", canvas_size, (255, 255, 255, 0))
 
         skin_size = self.player_texture.size
@@ -36,7 +43,7 @@ class AvatarRenderer:
         else:
             resized_texture_image = self.player_texture.resize((128, 128), Image.Resampling.NEAREST)
 
-        if self.avatar_type == 'head':  # 生成头部的
+        if self.avatar_type == "head":  # 生成头部的
             if skin_size == (64, 32):
                 operations = [
                     ((16, 16, 32, 32), 18.375, (100, 105)),
@@ -113,10 +120,13 @@ class AvatarRenderer:
 
         return canvas
 
-    def render(self) -> BytesIO:
+    def render(self, avatar_type: Literal["full", "head"] = "full") -> BytesIO:
         """
         生成图片
         """
+
+        self.avatar_type = avatar_type
+
         canvas = self._create_canvas()
 
         output_image = BytesIO()

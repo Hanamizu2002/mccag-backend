@@ -1,8 +1,9 @@
-from typing import Annotated, Optional
+from typing import Annotated
 
-from fastapi import APIRouter, Path, Query, Response
+from fastapi import APIRouter, Path, Response
 from fastapi.responses import FileResponse
 from mccag.common import COMMON_404_RESPONSE, PNG_200_RESPONSE, generate_response_by_fetch_profile
+from mccag.core import AvatarTypes
 from yggdrasil_mc.client import YggdrasilMC
 
 router = APIRouter(prefix="/minecraft.net")
@@ -16,8 +17,8 @@ router = APIRouter(prefix="/minecraft.net")
     tags=["Minecraft.net"],
 )
 async def get_from_official(
-    player: Annotated[str, Path(description="Minecraft player name")],
-    avatar_type: Annotated[Optional[str], Query(description="Type of avatar to generate: 'full' or 'head'", regex="^(full|head)$")] = 'full',
+    player: Annotated[str, Path(description="Minecraft player name", example="w84")],
+    avatar_type: AvatarTypes = "full",
 ):
     profile = await YggdrasilMC().by_name_async(player)
     return await generate_response_by_fetch_profile(profile, avatar_type)
@@ -31,8 +32,8 @@ async def get_from_official(
     tags=["Minecraft.net"],
 )
 async def get_from_official_uuid(
-    uuid: Annotated[str, Path(description="Minecraft player UUID")],
-    avatar_type: Annotated[Optional[str], Query(description="Type of avatar to generate: 'full' or 'head'", regex="^(full|head)$")] = 'full',
+    uuid: Annotated[str, Path(description="Minecraft player UUID", example="ca244462f8e5494791ec98f0ccf505ac")],
+    avatar_type: AvatarTypes = "full",
 ) -> Response:
     profile = await YggdrasilMC().by_uuid_async(uuid)
     return await generate_response_by_fetch_profile(profile, avatar_type)

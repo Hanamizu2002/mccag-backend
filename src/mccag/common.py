@@ -4,7 +4,7 @@ import httpx
 from fastapi import HTTPException, Response
 from yggdrasil_mc.client import PlayerProfile
 
-from mccag.core import AvatarRenderer
+from mccag.core import AvatarRenderer, AvatarTypes
 
 PNG_200_RESPONSE = {
     200: {
@@ -42,10 +42,10 @@ async def fetch_skin(url: str) -> BytesIO:
     return BytesIO(resp.content)
 
 
-async def generate_response_by_fetch_profile(profile: PlayerProfile, avatar_type: str) -> Response:
+async def generate_response_by_fetch_profile(profile: PlayerProfile, avatar_type: AvatarTypes) -> Response:
     if profile.skin:
         skin_texture = await fetch_skin(str(profile.skin.url))
-        image = AvatarRenderer(skin_texture, avatar_type).render()
+        image = AvatarRenderer(skin_texture).render(avatar_type=avatar_type)
 
         return Response(
             content=image.getvalue(),
